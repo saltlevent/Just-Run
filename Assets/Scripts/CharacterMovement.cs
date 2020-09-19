@@ -35,10 +35,7 @@ public class CharacterMovement : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) || isGrounded)
-        {
-            transform.Translate(Vector3.up*2f*Time.deltaTime);
-        }
+      
     }
     
     void Jump()
