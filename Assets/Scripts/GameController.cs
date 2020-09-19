@@ -4,20 +4,30 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Road Block Settings")]
     public Sprite[] roadModel;
 
-    [HideInInspector]
-    public GameObject[] roads = new GameObject[5];
+    GameObject[] roads;
+    [Tooltip("Number of background blocks")]
+    public int roadCount=5;
 
-    public Vector3 roadStartPosition;
-    public Vector3 roadEndPosition;
-
-    bool isGameStarted=false;
     [Tooltip("Speed of the background. for player, speed of character.")]
     public float roadSpeed = 10;
 
+    [Space]
+    [Header("Positions")]
+    public Vector3 roadStartPosition;
+    public Vector3 roadEndPosition;
+
+    
+    bool isGameStarted=false;
+
     void Start()
     {
+
+        //Seçilen adet kadar yol parçası dönecek arkaplanda
+        roads = new GameObject[roadCount];
+
         RoadCreator();
         isGameStarted = true;
     }
@@ -42,6 +52,8 @@ public class GameController : MonoBehaviour
                 //road için sprite seçimi. rastgele yol seçimi yapar.
                 roads[i].GetComponent<SpriteRenderer>().sprite = roadModel[Random.Range(0,roadModel.Length)];
 
+                //Eğer ilk elemanda değilse işlem yapılır 
+                //çünkü ilk elemanı başlangıç noktasını belirleyecek, diğerleri de ona eklenerek devam edecek.
                 if (i != 0)
                 {
                     //ilk obje için başlangıç pozisyonu belirlenecek. Hangi pozisyona konduysa oradan başlanacak.
@@ -51,7 +63,7 @@ public class GameController : MonoBehaviour
                     roads[i].transform.position += roads[i].GetComponent<SpriteRenderer>().sprite.bounds.extents.x * 2 * Vector3.right;
                 }
                 else
-                {   //seçilen başlangıç pozisyonuna yol yerleştirilir
+                {   //seçilen başlangıç pozisyonuna ilk yol yerleştirilir
                     roads[0].transform.position = roadStartPosition;
                 }
                 //
@@ -74,10 +86,11 @@ public class GameController : MonoBehaviour
                     roads[i].GetComponent<SpriteRenderer>().sprite = roadModel[Random.Range(0, roadModel.Length)];
                 }
                 //eğer 0. yol gelirse 4. yolun arkasına ekle
+                //ayrı bir koşul olmasının sebebi (n-1) sonucunun negatif döndürmesinden kaçınmak için
                 else if (roads[i].transform.position.x < roadEndPosition.x)
                 {
-                    roads[i].transform.position = roads[4].transform.position;
-                    roads[i].transform.position += roads[4].GetComponent<SpriteRenderer>().sprite.bounds.extents.x * 2 * Vector3.right;
+                    roads[i].transform.position = roads[roads.Length-1].transform.position;
+                    roads[i].transform.position += roads[roads.Length-1].GetComponent<SpriteRenderer>().sprite.bounds.extents.x * 2 * Vector3.right;
                     //road için sprite seçimi. rastgele yol seçimi yapar.
                     roads[i].GetComponent<SpriteRenderer>().sprite = roadModel[Random.Range(0, roadModel.Length)];
                 }
