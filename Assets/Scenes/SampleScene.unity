@@ -171,8 +171,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6861f238229b55242947e386380ce554, type: 3}
   roadCount: 5
   roadSpeed: 5
-  roadStartPosition: {x: 0.7, y: -0.6, z: 0}
-  roadEndPosition: {x: -25, y: -0.6, z: 0}
+  roadStartPosition: {x: 0.7, y: 0, z: 0}
+  roadEndPosition: {x: -25, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,6 +372,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   standardPosition: {x: -6, y: -2, z: -5}
-  jumpMaxHeight: 0
-  jumpSpeed: 0
-  fallSpeed: 0
+  jumpMaxHeight: 1
+  jumpSpeed: 5
+  fallSpeed: 5

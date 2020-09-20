@@ -19,12 +19,12 @@ public class CharacterMovement : MonoBehaviour
     Animator characterAnimator;
 
     //Karakterin yerde mi olduğunu kontrol eder.
-    bool isGrounded;
+    bool isGrounded = true;
 
-    //Zıplama başladığında true olur.
-    bool jumpUp;
+    //Zıplama yapılabileceğinde true olur.
+    bool jumpUp = true;
     //Düşüş başladığında true olur.
-    bool fallingDown;
+    bool fallingDown = false;
 
     void Start()
     {
@@ -35,18 +35,59 @@ public class CharacterMovement : MonoBehaviour
     
     void Update()
     {
-      
+#if UNITY_EDITOR
+        //eğer space tuşuna basılırsa zıplama işlemi başlar
+        if (Input.GetKeyDown(KeyCode.Space) || !isGrounded)
+        {
+            Jump();
+        }
+#elif UNITY_ANDROID
+       
+        // burası dokunmatik giriş için doldurulacak.
+
+#endif
     }
-    
+
     void Jump()
     {
-        isGrounded = true;
+        //karakterin yerde olmadığı belirtildi
+        isGrounded = false;
+        
+        //Zıplama animasyonu etkinleştirildi.
+        characterAnimator.SetBool("isJumping", true);
 
-        do
+        //maksimum yüksekliğe ulaşana kadar konumu y ekseninde arttırıldı
+        if (transform.position.y <= jumpMaxHeight && jumpUp)
         {
+            transform.position += Vector3.up * Time.deltaTime * jumpSpeed;
 
-        } while (transform.position.y >= jumpMaxHeight );
+            //eğer maksimum yüksekliğe ulaşılırsa düşüş başlayacak
+            //düşüşün başlaması için jumpUp false, fallingDown true olmalı
+            if (transform.position.y >= jumpMaxHeight)
+            {
+                jumpUp = false;
+                fallingDown = true;
+            }
+        }
+        else
+        {
+        //zemine (standardPosition) kadar konum y ekseninde azaltıldı
+            transform.position += Vector3.down * Time.deltaTime * fallSpeed;
 
-
+            
+            if (transform.position.y <= standardPosition.y)
+            {
+                //zemine değdikten sonra zıplayabilmesi için jumpUp true edildi
+                jumpUp = true;
+                //düşme bittiği için fallingDown false edildi
+                fallingDown = false;
+                //yere değdiği için isGrounded true edildi
+                isGrounded = true;
+                //zıplama animasyonu durduruldu
+                characterAnimator.SetBool("isJumping", false);
+            }
+        }
+         
+        
     }
 }
